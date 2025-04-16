@@ -1,12 +1,9 @@
 import {
-  AuthBindings,
-  GitHubBanner,
+  AuthProvider,
   Refine,
-  WelcomePage,
 } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
-
 import { useAuth0 } from "@auth0/auth0-react";
 import nestjsxCrudDataProvider from "@refinedev/nestjsx-crud";
 import routerBindings, {
@@ -16,18 +13,35 @@ import routerBindings, {
 import axios from "axios";
 import { BrowserRouter, Route, Routes } from "react-router";
 import "./App.css";
+import Sidebar from "./pages/Layout"
+import NoteContainer from "./pages/NoteContainer/notecontainer";
+
 
 function App() {
-  const { isLoading, user, logout, getIdTokenClaims } = useAuth0();
 
+  const notes =[{
+    text:"asbnzdcs",
+    time:"2:12PM",
+    color:"cyan"
+  },{
+    text:"vbnsdtfgvbh",
+    time:"2:30PM",
+    color:"cyan"
+  },
+  {
+    text:"xdfgbnjk",
+    time:"4:12PM",
+    color:"yellow"
+  },
+  {
+    text:"sdcfgvbhnj",
+    time:"2:40PM",
+    color:"pink"
+  }]
+  const { isLoading, user, logout, getIdTokenClaims } = useAuth0();
   const API_URL = "https://api.nestjsx-crud.refine.dev";
   const dataProvider = nestjsxCrudDataProvider(API_URL);
-
-  if (isLoading) {
-    return <span>loading...</span>;
-  }
-
-  const authProvider: AuthBindings = {
+  const authProvider: AuthProvider = {
     login: async () => {
       return {
         success: true,
@@ -87,7 +101,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      <GitHubBanner />
       <RefineKbarProvider>
         <DevtoolsProvider>
           <Refine
@@ -102,7 +115,9 @@ function App() {
             }}
           >
             <Routes>
-              <Route index element={<WelcomePage />} />
+              <Route index element={<Sidebar children={undefined}/>} />
+              <Route path="notepad" element={<NoteContainer notes={notes}/>} />
+              
             </Routes>
             <RefineKbar />
             <UnsavedChangesNotifier />

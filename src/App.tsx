@@ -13,45 +13,59 @@ import routerBindings, {
 import axios from "axios";
 import { BrowserRouter, Route, Routes } from "react-router";
 import "./App.css";
-import Sidebar from "./pages/Layout"
+import Sidebar from "./pages/Layout";
+import Sidebar1 from "./pages/Sidebar/sidebar";
 import NoteContainer from "./pages/NoteContainer/notecontainer";
-
+import { useState } from "react";
 
 function App() {
+  const [notes, setNotes] = useState([
+    {
+      text: "asbnzdcs",
+      time: "2:12PM",
+      color: "cyan",
+    },
+    {
+      text: "vbnsdtfgvbh",
+      time: "2:30PM",
+      color: "cyan",
+    },
+    {
+      text: "xdfgbnjk",
+      time: "4:12PM",
+      color: "yellow",
+    },
+    {
+      text: "sdcfgvbhnj",
+      time: "2:40PM",
+      color: "pink",
+    },
+  ]);
 
-  const notes =[{
-    text:"asbnzdcs",
-    time:"2:12PM",
-    color:"cyan"
-  },{
-    text:"vbnsdtfgvbh",
-    time:"2:30PM",
-    color:"cyan"
-  },
-  {
-    text:"xdfgbnjk",
-    time:"4:12PM",
-    color:"yellow"
-  },
-  {
-    text:"sdcfgvbhnj",
-    time:"2:40PM",
-    color:"pink"
-  }]
+  const addNote = (color: string) => {
+    const currentTime = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const tempNotes = [...notes];
+    tempNotes.push({
+      text: "",
+      time: currentTime,
+      color,
+    });
+    setNotes(tempNotes);
+  };
+
   const { isLoading, user, logout, getIdTokenClaims } = useAuth0();
   const API_URL = "https://api.nestjsx-crud.refine.dev";
   const dataProvider = nestjsxCrudDataProvider(API_URL);
+
   const authProvider: AuthProvider = {
-    login: async () => {
-      return {
-        success: true,
-      };
-    },
+    login: async () => ({ success: true }),
     logout: async () => {
       logout({ returnTo: window.location.origin });
-      return {
-        success: true,
-      };
+      return { success: true };
     },
     onError: async (error) => {
       console.error(error);
@@ -64,16 +78,11 @@ function App() {
           axios.defaults.headers.common = {
             Authorization: `Bearer ${token.__raw}`,
           };
-          return {
-            authenticated: true,
-          };
+          return { authenticated: true };
         } else {
           return {
             authenticated: false,
-            error: {
-              message: "Check failed",
-              name: "Token not found",
-            },
+            error: { message: "Check failed", name: "Token not found" },
             redirectTo: "/login",
             logout: true,
           };
@@ -115,9 +124,16 @@ function App() {
             }}
           >
             <Routes>
-              <Route index element={<Sidebar children={undefined}/>} />
-              <Route path="notepad" element={<NoteContainer notes={notes}/>} />
-              
+              <Route index element={<Sidebar children={undefined} />} />
+              <Route
+                path="notepad"
+                element={
+                  <div style={{ display: "flex" }}>
+                    <Sidebar1 addNote={addNote} />
+                    <NoteContainer notes={notes} />
+                  </div>
+                }
+              />
             </Routes>
             <RefineKbar />
             <UnsavedChangesNotifier />

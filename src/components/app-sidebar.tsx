@@ -45,7 +45,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-white font-sans text-2xl">Todo-Application</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-white font-serif text-2xl">Todo-Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

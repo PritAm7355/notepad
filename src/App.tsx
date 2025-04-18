@@ -16,7 +16,6 @@ import "./App.css";
 import Sidebar from "./pages/Layout";
 import Sidebar1 from "./pages/Sidebar/sidebar";
 import NoteContainer from "./pages/NoteContainer/notecontainer";
-
 import Login from "./Login ";
 import { useState } from "react";
 function App() {
@@ -126,7 +125,7 @@ function App() {
           >
             <Routes>
               <Route path="/" element={<Login />} />
-              <Route index element={<Sidebar children={undefined} />} />
+              <Route path="/sidebar" element={<Sidebar children={undefined}/>} />
               <Route
                 path="notepad"
                 element={
@@ -136,7 +135,6 @@ function App() {
                   </div>
                 }
               />
-
             </Routes>
             <RefineKbar />
             <UnsavedChangesNotifier />

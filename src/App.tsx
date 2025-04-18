@@ -15,6 +15,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import "./App.css";
 import Sidebar from "./pages/Layout"
 import NoteContainer from "./pages/NoteContainer/notecontainer";
+import Login from "./Login ";
 
 
 function App() {
@@ -115,7 +116,9 @@ function App() {
             }}
           >
             <Routes>
-              <Route index element={<Sidebar children={undefined}/>} />
+              
+              <Route path="/" element={<Login />} />
+              <Route path = "/sidebar" element={<Sidebar children={undefined}/>} />
               <Route path="notepad" element={<NoteContainer notes={notes}/>} />
               
             </Routes>

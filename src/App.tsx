@@ -16,18 +16,33 @@ import "./App.css";
 import Sidebar from "./pages/Layout";
 import Sidebar1 from "./pages/Sidebar/sidebar";
 import NoteContainer from "./pages/NoteContainer/notecontainer";
+import SignUp from "./pages/signUp";  
+
 import Login from "./Login ";
 import { useState } from "react";
-
-interface Note {
-  id: string;
-  text: string;
-  time: string;
-  color: string;
-}
-
 function App() {
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [notes, setNotes] = useState([
+    {
+      text: "asbnzdcs",
+      time: "2:12PM",
+      color: "cyan",
+    },
+    {
+      text: "vbnsdtfgvbh",
+      time: "2:30PM",
+      color: "cyan",
+    },
+    {
+      text: "xdfgbnjk",
+      time: "4:12PM",
+      color: "yellow",
+    },
+    {
+      text: "sdcfgvbhnj",
+      time: "2:40PM",
+      color: "pink",
+    },
+  ]);
 
   const addNote = (color: string) => {
     const currentTime = new Date().toLocaleTimeString([], {
@@ -37,7 +52,6 @@ function App() {
 
     const tempNotes = [...notes];
     tempNotes.push({
-      id: Date.now() + "" + Math.floor(Math.random() * 78),
       text: "",
       time: currentTime,
       color,
@@ -114,8 +128,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Login />} />
               <Route path="/sidebar" element={<Sidebar children={undefined} />} />
+              <Route path="/signup" element={<SignUp/>} />              
               <Route
-                path="/notepad"
+                path="notepad"
                 element={
                   <div style={{ display: "flex" }}>
                     <Sidebar1 addNote={addNote} />
@@ -123,6 +138,7 @@ function App() {
                   </div>
                 }
               />
+
             </Routes>
             <RefineKbar />
             <UnsavedChangesNotifier />

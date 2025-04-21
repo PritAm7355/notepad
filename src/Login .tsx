@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,17 +8,46 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!username.trim()|| !password.trim()) {
             alert('Please fill in both fields');
             
-        } else {
-            localStorage.setItem('username', username);
-            localStorage.setItem('password', password);
-            navigate('/sidebar');
+        }  try {
+            const response = await axios.get(`http://localhost:3001/users`, {
+                params: {
+                    username,
+                    password,
+                },
+            });
+
+            const users = response.data;
+
+            if (users.length > 0) {
+                const user = users[0];
+                localStorage.setItem('username', user.username);
+                localStorage.setItem('password', user.password);
+                navigate('/sidebar');
+            } else {
+                alert('Invalid username or password');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Something went wrong. Please try again.');
         }
+        
+        
+
+
+
+        
     };
+    const handleSignup = () => {    
+        navigate('/signup');
+    }
+    
+
+    
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -45,6 +75,22 @@ const Login: React.FC = () => {
                 <button type="submit" style={{ padding: '10px', backgroundColor: '#007BFF', color: '#fff', border: 'none', cursor: 'pointer' }}>
                     Login
                 </button>
+                <button
+                        type="button"
+                        onClick={handleSignup}
+                        style={{
+                            padding: '10px',
+                            marginTop: '15px',
+                            backgroundColor: '#28a745',
+                            color: '#fff',
+                            border: 'none',
+                            cursor: 'pointer',
+                            
+                        }}
+                    >
+                        Signup
+                    </button>
+               
             </form>
         </div>
     );

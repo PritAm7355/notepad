@@ -17,7 +17,7 @@ import Sidebar from "./pages/Layout";
 import Sidebar1 from "./pages/Sidebar/sidebar";
 import NoteContainer from "./pages/NoteContainer/notecontainer";
 import Login from "./Login ";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Note {
   id: string;
@@ -27,7 +27,11 @@ interface Note {
 }
 
 function App() {
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [notes, setNotes] = useState<Note[]>(() => {
+    const savedNotes = localStorage.getItem("notes-app");
+    return savedNotes ? JSON.parse(savedNotes) : [];
+  });
+  
 
   const addNote = (color: string) => {
     const currentTime = new Date().toLocaleTimeString([], {
@@ -103,8 +107,19 @@ function App() {
     tempNotes.splice(index, 1);
     setNotes(tempNotes);
   };
-  
 
+  const updateText=(text: any,id: any)=>{
+  const tempNotes=[...notes]
+
+  const index = tempNotes.findIndex((item) => item.id === id);
+  if (index < 0) return;
+  tempNotes[index].text=text;
+  setNotes(tempNotes);
+  }
+  
+useEffect(()=>{
+localStorage.setItem("notes-app",JSON.stringify(notes))
+},[notes])
   return (
     <BrowserRouter>
       <RefineKbarProvider>
@@ -128,7 +143,7 @@ function App() {
                 element={
                   <div style={{ display: "flex" }}>
                     <Sidebar1 addNote={addNote} />
-                    <NoteContainer notes={notes} deleteNote={deleteNote} />
+                    <NoteContainer notes={notes} deleteNote={deleteNote}  updateText={updateText}/>
                   </div>
                 }
               />

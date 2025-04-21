@@ -110,6 +110,15 @@ function App() {
     },
   };
 
+  const deleteNote = (id: string) => {
+    const tempNotes = [...notes];
+    const index = tempNotes.findIndex((item) => item.id === id);
+    if (index < 0) return;
+    tempNotes.splice(index, 1);
+    setNotes(tempNotes);
+  };
+  
+
   return (
     <BrowserRouter>
       <RefineKbarProvider>
@@ -135,7 +144,7 @@ function App() {
                 element={
                   <div style={{ display: "flex" }}>
                     <Sidebar1 addNote={addNote} />
-                    <NoteContainer notes={notes} />
+                    <NoteContainer notes={notes} deleteNote={deleteNote} />
                   </div>
                 }
               />

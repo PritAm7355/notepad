@@ -14,35 +14,79 @@ import axios from "axios";
 import { BrowserRouter, Route, Routes } from "react-router";
 import "./App.css";
 import Sidebar from "./pages/Layout";
-import Sidebar1 from "./pages/Sidebar/sidebar";
+import Sidebar1 from "./pages/NoteSidebar/sidebar";
 import NoteContainer from "./pages/NoteContainer/notecontainer";
-import SignUp from "./pages/signUp";  
-import Board from "./pages/Board"
 import Login from "./Login ";
-import { useState } from "react";
-function App() {
-  const [notes, setNotes] = useState([
-    {
-      text: "asbnzdcs",
-      time: "2:12PM",
-      color: "cyan",
-    }
-    
-  ]);
+import { useEffect, useState } from "react";
+import Board from "./pages/Board/Board";
 
-  const addNote = (color: string) => {
+
+interface Note {
+  id: string;
+  text: string;
+  time: string;
+  color: string;
+}
+
+function App() {
+  const [notes, setNotes] = useState<Note[]>([])
+  const fetchNotes = async() => {
+    try {
+      const response = await axios.get("http://localhost:3001/notes");
+      setNotes(response.data) 
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  const addNote = async (color: string) => {
     const currentTime = new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
 
-    const tempNotes = [...notes];
-    tempNotes.push({
+    const newNote = {
+      id: Date.now() + "" + Math.floor(Math.random() * 78),
       text: "",
       time: currentTime,
       color,
-    });
-    setNotes(tempNotes);
+    };
+
+    try {
+      const response = await axios.post("http://localhost:3001/notes", newNote);
+      setNotes((prev) => [...prev, response.data]);
+    } catch (err) {
+      console.error("Error adding note:", err);
+    }
+  };
+
+  const deleteNote = async (id: string) => {
+    try {
+      await axios.delete(`http://localhost:3001/notes/${id}`);
+      setNotes((prev) => prev.filter((note) => note.id !== id));
+    } catch (err) {
+      console.error("Error deleting note:", err);
+    }
+  };
+
+  const updateText = async (text: string, id: string) => {
+    const noteToUpdate = notes.find((n) => n.id === id);
+    if (!noteToUpdate) return;
+
+    const updatedNote = { ...noteToUpdate, text };
+
+    try {
+      await axios.put(`http://localhost:3001/notes/${id}`, updatedNote);
+      setNotes((prev) =>
+        prev.map((n) => (n.id === id ? updatedNote : n))
+      );
+    } catch (err) {
+      console.error("Error updating note:", err);
+    }
   };
 
   const { isLoading, user, logout, getIdTokenClaims } = useAuth0();
@@ -96,6 +140,9 @@ function App() {
     },
   };
 
+ 
+
+ 
   return (
     <BrowserRouter>
       <RefineKbarProvider>
@@ -114,18 +161,16 @@ function App() {
             <Routes>
               <Route path="/" element={<Login />} />
               <Route path="/sidebar" element={<Sidebar children={undefined} />} />
-              <Route path="/signup" element={<SignUp/>} />
-              <Route path="/board" element={<Board/>} />              
+              <Route path="/board" element={<Board />} />
               <Route
-                path="notepad"
+                path="/notepad"
                 element={
                   <div style={{ display: "flex" }}>
                     <Sidebar1 addNote={addNote} />
-                    <NoteContainer notes={notes} />
+                    <NoteContainer notes={notes} deleteNote={deleteNote}  updateText={updateText}/>
                   </div>
                 }
               />
-
             </Routes>
             <RefineKbar />
             <UnsavedChangesNotifier />

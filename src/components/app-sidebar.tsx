@@ -19,14 +19,10 @@ const items = [
   },
   {
     title: "Board",
-    url: "#",
+    url: "http://localhost:5173/board",
     icon: Inbox,
   },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
+  
   {
     title: "Sticky Wall",
     url: "http://localhost:5173/notepad",

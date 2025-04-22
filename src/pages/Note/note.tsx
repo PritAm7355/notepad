@@ -12,12 +12,12 @@ timeout=setTimeout((func: any,timer: any)=>{
   },timer);
 }
 
-const updateText=(text: any,id: undefined)=>{
-  debounce(()=>props.updateText(text,id))
-}
+// const updateText=(text: any,id: undefined)=>{
+//   debounce(()=>props.updateText(text,id))
+// }
   return (
     <div className="note" style={{ backgroundColor: props.note.color }}>
-      <textarea className="note_text" defaultValue={props.note.text}  onChange={(event)=>updateText(event.target.value,props.note.id)}/>
+      <textarea className="note_text" defaultValue={props.note.text}  onChange={(event)=>props.updateText(event.target.value,props.note.id)}/>
       <div className="note_footer">
         <p className="text-black">{props.note.time}</p>
         <DeleteIcon className="cursor-pointer text-black " size={20}  onClick={()=>props.deleteNote(props.note.id)}/>

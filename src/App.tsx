@@ -17,7 +17,7 @@ import Sidebar from "./pages/Layout";
 import Sidebar1 from "./pages/Sidebar/sidebar";
 import NoteContainer from "./pages/NoteContainer/notecontainer";
 import SignUp from "./pages/signUp";  
-import Board from "./pages/Board";
+import Board from "./pages/Board"
 import Login from "./Login ";
 import { useState } from "react";
 function App() {
@@ -26,22 +26,8 @@ function App() {
       text: "asbnzdcs",
       time: "2:12PM",
       color: "cyan",
-    },
-    {
-      text: "vbnsdtfgvbh",
-      time: "2:30PM",
-      color: "cyan",
-    },
-    {
-      text: "xdfgbnjk",
-      time: "4:12PM",
-      color: "yellow",
-    },
-    {
-      text: "sdcfgvbhnj",
-      time: "2:40PM",
-      color: "pink",
-    },
+    }
+    
   ]);
 
   const addNote = (color: string) => {
@@ -110,15 +96,6 @@ function App() {
     },
   };
 
-  const deleteNote = (id: string) => {
-    const tempNotes = [...notes];
-    const index = tempNotes.findIndex((item) => item.id === id);
-    if (index < 0) return;
-    tempNotes.splice(index, 1);
-    setNotes(tempNotes);
-  };
-  
-
   return (
     <BrowserRouter>
       <RefineKbarProvider>
@@ -144,7 +121,7 @@ function App() {
                 element={
                   <div style={{ display: "flex" }}>
                     <Sidebar1 addNote={addNote} />
-                    <NoteContainer notes={notes} deleteNote={deleteNote} />
+                    <NoteContainer notes={notes} />
                   </div>
                 }
               />
